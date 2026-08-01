@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial DNA — Join</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+      background: #09090d;
+      color: #f0f0f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: #13131a;
+      border: 1px solid #22222e;
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* ── Step indicator ── */
+    .steps {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 36px;
+    }
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #2a2a3a;
+      transition: background 0.3s, width 0.3s;
+    }
+    .step-dot.active { background: #7c6ff7; width: 24px; border-radius: 4px; }
+    .step-dot.done   { background: #22c55e; }
+
+    /* ── Step panels ── */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .icon { font-size: 40px; margin-bottom: 16px; }
+    h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
+    .subtitle { color: #777; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+    .privacy-note { font-size: 11px; color: #555; margin-bottom: 24px; font-style: italic; }
+
+    label { display: block; font-size: 13px; color: #999; margin-bottom: 6px; }
+    input {
+      width: 100%;
+      background: #09090d;
+      border: 1px solid #22222e;
+      border-radius: 10px;
+      color: #f0f0f5;
+      font-size: 15px;
+      padding: 13px 15px;
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #7c6ff7; }
+    input::placeholder { color: #444; }
+
+    .btn {
+      width: 100%;
+      background: #7c6ff7;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      margin-top: 4px;
+    }
+    .btn:hover:not(:disabled) { background: #6259d4; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* ── Plaid step ── */
+    .bank-info {
+      background: #09090d;
+      border: 1px solid #22222e;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 24px;
+    }
+    .bank-info-row { display: flex; justify-content: space-between; font-size: 13px; color: #777; margin-bottom: 4px; }
+    .bank-info-row span { color: #f0f0f5; font-weight: 500; }
+
+    /* ── Status ── */
+    .status { font-size: 13px; color: #777; text-align: center; margin-top: 14px; min-height: 18px; }
+    .status.error { color: #ef4444; }
+    .status.loading { color: #7c6ff7; }
+
+    /* ── Success step ── */
+    .success-icon { font-size: 56px; margin-bottom: 20px; }
+    .accounts-list { margin-top: 24px; }
+    .account-card {
+      background: #09090d;
+      border: 1px solid #22222e;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .acct-name { font-size: 14px; font-weight: 600; }
+    .acct-sub  { font-size: 12px; color: #666; margin-top: 2px; }
+    .acct-bal  { font-size: 16px; font-weight: 700; color: #7c6ff7; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Step indicator -->
+  <div class="steps">
+    <div class="step-dot active" id="dot-0"></div>
+    <div class="step-dot"        id="dot-1"></div>
+    <div class="step-dot"        id="dot-2"></div>
+  </div>
+
+  <!-- ── Step 0: Welcome ── -->
+  <div class="step active" id="step-0">
+    <div class="icon">🧬</div>
+    <h1>Financial DNA Explorer</h1>
+    <p class="subtitle">Discover what your spending habits reveal about you — and how you connect with others.</p>
+    <button class="btn" onclick="goTo(1)">Get started →</button>
+  </div>
+
+  <!-- ── Step 1: Profile ── -->
+  <div class="step" id="step-1">
+    <div class="icon">👤</div>
+    <h1>Who are you?</h1>
+    <p class="subtitle">Just a few basics to set up your profile.</p>
+    <p class="privacy-note">None of this will be visible to others — you’ll choose a handle later.</p>
+
+    <label for="firstName">First name</label>
+    <input type="text" id="firstName" placeholder="Amanda" autocomplete="given-name" />
+
+    <label for="lastName">Last name</label>
+    <input type="text" id="lastName" placeholder="Bradford" autocomplete="family-name" />
+
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" autocomplete="bday" />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+
+    <button class="btn" id="nextBtn" onclick="goToPlaid()">Continue →</button>
+  </div>
+
+  <!-- ── Step 2: Connect bank ── -->
+  <div class="step" id="step-2">
+    <div class="icon">🏦</div>
+    <h1>Connect your bank</h1>
+    <p class="subtitle">Securely link your account via Plaid. We only read account info — no charges, ever.</p>
+
+    <div class="bank-info">
+      <div class="bank-info-row">Name <span id="previewName">—</span></div>
+      <div class="bank-info-row">Email <span id="previewEmail">—</span></div>
+    </div>
+
+    <button class="btn" id="plaidBtn" onclick="openPlaid()">🔗 Connect Bank Account</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <!-- ── Step 3: Done ── -->
+  <div class="step" id="step-3">
+    <div class="success-icon">✅</div>
+    <h1>You're in!</h1>
+    <p class="subtitle">Your financial DNA is saved. Here's what we connected:</p>
+    <div class="accounts-list" id="accountList"></div>
+  </div>
+
+</div>
+
+<script>
+  // localhost → same origin; GitHub Pages → Tailscale server
+  const SERVER = 'https://plaid-backend-production-b1ff.up.railway.app';
+  let userData = { name: '', email: '' };
+  let currentStep = 0;
+
+  function setDots(step) {
+    [0, 1, 2].forEach(i => {
+      const dot = document.getElementById('dot-' + i);
+      dot.className = 'step-dot' + (i < step ? ' done' : i === step ? ' active' : '');
+    });
+  }
+
+  function goTo(step) {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-' + step).classList.add('active');
+    setDots(step);
+    currentStep = step;
+  }
+
+  function goToPlaid() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const birthday  = document.getElementById('birthday').value;
+    const email     = document.getElementById('email').value.trim();
+    if (!firstName) { alert('Please enter your first name.'); return; }
+    if (!lastName)  { alert('Please enter your last name.'); return; }
+    if (!birthday)  { alert('Please enter your birthday.'); return; }
+    if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+    userData = { name: firstName, last_name: lastName, birthday, email };
+    document.getElementById('previewName').textContent  = firstName + ' ' + lastName;
+    document.getElementById('previewEmail').textContent = email;
+    goTo(2);
+  }
+
+  function setStatus(msg, cls = '') {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status ' + cls;
+  }
+
+  async function openPlaid() {
+    const btn = document.getElementById('plaidBtn');
+    btn.disabled = true;
+    setStatus('Getting secure link…', 'loading');
+
+    try {
+      const ltRes = await fetch(`${SERVER}/supabase/create_link_token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+      const { link_token, error } = await ltRes.json();
+      if (error) throw new Error(JSON.stringify(error));
+
+      setStatus('');
+      const handler = Plaid.create({
+        token: link_token,
+        onSuccess: async (public_token, metadata) => {
+          setStatus('Saving your data…', 'loading');
+          btn.disabled = true;
+          try {
+            const exRes = await fetch(`${SERVER}/supabase/exchange_token`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                public_token,
+                institution: metadata.institution,
+                name: userData.name,
+                last_name: userData.last_name,
+                birthday: userData.birthday,
+                email: userData.email,
+              }),
+            });
+            const result = await exRes.json();
+            if (result.error) throw new Error(JSON.stringify(result.error));
+
+            // Show success
+            const list = document.getElementById('accountList');
+            list.innerHTML = '';
+            (result.accounts || []).forEach(acct => {
+              const bal = acct.balances?.current != null
+                ? '$' + Number(acct.balances.current).toLocaleString()
+                : '—';
+              const div = document.createElement('div');
+              div.className = 'account-card';
+              div.innerHTML = `
+                <div>
+                  <div class="acct-name">${acct.name}</div>
+                  <div class="acct-sub">${acct.subtype}${acct.mask ? ' ····' + acct.mask : ''}</div>
+                </div>
+                <div class="acct-bal">${bal}</div>
+              `;
+              list.appendChild(div);
+            });
+
+            // Remove last dot (only 3 steps shown)
+            setDots(3);
+            goTo(3);
+          } catch (err) {
+            setStatus('Save failed: ' + err.message, 'error');
+            btn.disabled = false;
+          }
+        },
+        onExit: (err) => {
+          if (err) setStatus(err.display_message || 'Something went wrong.', 'error');
+          else setStatus('');
+          btn.disabled = false;
+        },
+      });
+
+      handler.open();
+    } catch (err) {
+      setStatus('Error: ' + err.message, 'error');
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
