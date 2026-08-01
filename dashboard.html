@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Financial DNA — Home</title>
+  <title>Financial DNA — Dashboard</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -11,135 +11,107 @@
       background: #09090d;
       color: #f0f0f5;
       min-height: 100vh;
-      padding: 32px 20px 60px;
+      padding: 28px 16px 60px;
+      max-width: 720px;
+      margin: 0 auto;
     }
 
-    .header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    .logo { font-size: 28px; }
-    .brand { font-size: 18px; font-weight: 700; color: #f0f0f5; }
+    .header { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .logo { font-size: 26px; }
+    .brand { font-size: 18px; font-weight: 700; }
     .brand span { color: #7c6ff7; }
 
-    .welcome {
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .sub { color: #666; font-size: 13px; margin-bottom: 24px; }
+
+    /* Net worth */
+    .net-worth {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 1px solid #2a2a3a;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
       margin-bottom: 28px;
     }
-    .welcome h1 {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .welcome p { color: #666; font-size: 14px; }
+    .nw-label { font-size: 11px; color: #888; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+    .nw-amount { font-size: 36px; font-weight: 800; color: #7c6ff7; letter-spacing: -1px; }
+    .nw-sub { font-size: 12px; color: #555; margin-top: 4px; }
 
-    /* Net worth card */
-    .net-worth {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border: 1px solid #2a2a3a;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .net-worth-label { font-size: 12px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-    .net-worth-amount { font-size: 40px; font-weight: 800; color: #7c6ff7; letter-spacing: -1px; }
-    .net-worth-sub { font-size: 12px; color: #555; margin-top: 6px; }
-
-    /* Section */
-    .section-title {
-      font-size: 13px;
-      color: #666;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin: 24px 0 12px;
-    }
-
-    /* Account cards */
-    .account-card {
-      background: #13131a;
-      border: 1px solid #1e1e28;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
+    /* Account section */
+    .acct-block { margin-bottom: 32px; }
+    .acct-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
+      margin-bottom: 10px;
     }
-    .acct-left {}
-    .acct-name { font-size: 14px; font-weight: 600; }
-    .acct-sub { font-size: 12px; color: #555; margin-top: 2px; }
-    .acct-bal {
-      font-size: 16px;
-      font-weight: 700;
-      color: #7c6ff7;
-    }
-    .acct-bal.negative { color: #ef4444; }
+    .acct-name-big { font-size: 15px; font-weight: 700; }
+    .acct-meta { font-size: 12px; color: #555; }
+    .acct-bal-big { font-size: 18px; font-weight: 800; color: #7c6ff7; }
+    .acct-bal-big.negative { color: #ef4444; }
 
-    /* DNA teaser */
-    .dna-card {
-      background: #13131a;
-      border: 1px solid #2a2a3a;
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 24px;
-      text-align: center;
-    }
-    .dna-emoji { font-size: 32px; margin-bottom: 10px; }
-    .dna-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-    .dna-card p { font-size: 13px; color: #666; line-height: 1.5; }
-    .dna-badge {
-      display: inline-block;
-      background: #1e1a3a;
-      border: 1px solid #7c6ff7;
-      color: #7c6ff7;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 20px;
-      padding: 4px 12px;
-      margin-top: 12px;
-    }
-
-    /* Invite */
-    .invite-card {
-      background: #13131a;
-      border: 1px dashed #2a2a3a;
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 12px;
-      text-align: center;
-    }
-    .invite-card p { font-size: 13px; color: #666; margin-bottom: 12px; }
-    .invite-btn {
-      background: #7c6ff7;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 11px 24px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .invite-btn:hover { background: #6259d4; }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #22c55e;
-      color: #fff;
+    /* Transaction table */
+    .tx-table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 13px;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 20px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
     }
-    .toast.show { opacity: 1; }
+    .tx-table th {
+      text-align: left;
+      font-size: 11px;
+      color: #555;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 0 10px 8px;
+      border-bottom: 1px solid #1e1e28;
+    }
+    .tx-table th:last-child { text-align: right; }
+    .tx-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #111118;
+      vertical-align: middle;
+    }
+    .tx-table tr:last-child td { border-bottom: none; }
+    .tx-table tr:hover td { background: #111118; }
+
+    .tx-name { font-weight: 500; color: #e0e0f0; }
+    .tx-cat  { font-size: 11px; color: #555; margin-top: 2px; }
+    .tx-date { color: #555; white-space: nowrap; }
+    .tx-amt  { text-align: right; font-weight: 600; white-space: nowrap; }
+    .tx-amt.debit  { color: #f0f0f5; }
+    .tx-amt.credit { color: #22c55e; }
+    .tx-pending { display: inline-block; font-size: 10px; color: #f59e0b;
+                  background: #1a1500; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+
+    .empty { color: #444; font-size: 13px; padding: 16px 10px; text-align: center; }
+    .loading-row td { color: #444; text-align: center; padding: 16px; }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid #1a1a24;
+      margin: 4px 0 16px;
+    }
+
+    /* Status */
+    .status-bar { font-size: 13px; color: #666; text-align: center; margin-bottom: 16px; }
+    .status-bar.error { color: #ef4444; }
+
+    /* Add account btn */
+    .add-btn {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px dashed #2a2a3a;
+      color: #555;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color .2s, color .2s;
+      margin-top: 8px;
+    }
+    .add-btn:hover { border-color: #7c6ff7; color: #7c6ff7; }
   </style>
 </head>
 <body>
@@ -149,88 +121,188 @@
     <div class="brand">Financial <span>DNA</span></div>
   </div>
 
-  <div class="welcome">
-    <h1 id="welcomeMsg">Welcome back! 👋</h1>
-    <p>Your financial profile is ready.</p>
-  </div>
+  <h1 id="welcomeMsg">Your Dashboard</h1>
+  <p class="sub" id="statusBar">Loading transactions…</p>
 
-  <!-- Net worth -->
   <div class="net-worth">
-    <div class="net-worth-label">Total balance</div>
-    <div class="net-worth-amount" id="netWorth">—</div>
-    <div class="net-worth-sub" id="accountCount">calculating...</div>
+    <div class="nw-label">Total balance</div>
+    <div class="nw-amount" id="netWorth">—</div>
+    <div class="nw-sub" id="nwSub">calculating…</div>
   </div>
 
-  <!-- Accounts -->
-  <div class="section-title">Connected accounts</div>
-  <div id="accountList">
-    <div class="account-card" style="color:#555;justify-content:center;font-size:13px;">Loading accounts...</div>
-  </div>
+  <div id="accountsContainer"></div>
 
-  <!-- DNA teaser -->
-  <div class="dna-card">
-    <div class="dna-emoji">🔬</div>
-    <h3>Your Financial DNA</h3>
-    <p>We're analyzing your spending patterns to reveal your financial personality type.</p>
-    <div class="dna-badge">✨ Analysis coming soon</div>
-  </div>
+  <button class="add-btn" onclick="window.location.href='join-railway.html'">
+    + Connect another account
+  </button>
 
-  <!-- Invite -->
-  <div class="invite-card">
-    <p>Know someone whose financial DNA you're curious about?</p>
-    <button class="invite-btn" onclick="copyInvite()">📋 Copy invite link</button>
-  </div>
+<script>
+  const SERVER   = 'https://plaid-backend-production-b1ff.up.railway.app';
+  const name     = sessionStorage.getItem('fdna_name') || '';
+  const item_id  = sessionStorage.getItem('fdna_item_id') || '';
+  const accounts = JSON.parse(sessionStorage.getItem('fdna_accounts') || '[]');
 
-  <div class="toast" id="toast">Link copied!</div>
+  if (name) document.getElementById('welcomeMsg').textContent = `${name}'s Dashboard`;
 
-  <script>
-    const INVITE_URL = 'https://pearlouisebot.github.io/plaid-onboarding/join-railway.html';
+  function fmt$(n) {
+    if (n == null) return '—';
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtDate(str) {
+    if (!str) return '—';
+    const [y, m, d] = str.split('-');
+    return `${m}/${d}`;
+  }
+  function truncate(str, n) {
+    return str && str.length > n ? str.slice(0, n) + '…' : str;
+  }
 
-    // Read name + accounts from sessionStorage (set by join page)
-    const name     = sessionStorage.getItem('fdna_name') || '';
-    const accounts = JSON.parse(sessionStorage.getItem('fdna_accounts') || '[]');
+  function renderAccountBlock(acct, txns) {
+    const bal = acct.balances?.current ?? null;
+    const isNeg = bal < 0;
+    const isCredit = acct.type === 'credit';
 
-    if (name) {
-      document.getElementById('welcomeMsg').textContent = `Welcome, ${name}! 👋`;
+    // For credit, current balance = amount owed (show as negative concept)
+    const displayBal = bal;
+    const balClass = isCredit ? 'negative' : '';
+
+    const block = document.createElement('div');
+    block.className = 'acct-block';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'acct-header';
+    header.innerHTML = `
+      <div>
+        <div class="acct-name-big">${acct.name}</div>
+        <div class="acct-meta">${acct.subtype}${acct.mask ? ' ····' + acct.mask : ''}</div>
+      </div>
+      <div class="acct-bal-big ${balClass}">${fmt$(displayBal)}</div>
+    `;
+    block.appendChild(header);
+
+    const hr = document.createElement('hr');
+    hr.className = 'section-divider';
+    block.appendChild(hr);
+
+    // Table
+    const table = document.createElement('table');
+    table.className = 'tx-table';
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Merchant</th>
+          <th>Date</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-${acct.account_id}"></tbody>
+    `;
+    block.appendChild(table);
+
+    const tbody = table.querySelector('tbody');
+
+    if (!txns || txns.length === 0) {
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="3">No recent transactions</td></tr>';
+    } else {
+      txns.slice(0, 10).forEach(tx => {
+        const isCredit = tx.amount < 0; // Plaid: positive = debit, negative = credit/refund
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <div class="tx-name">${truncate(tx.merchant_name || tx.name, 32)}${tx.pending ? '<span class="tx-pending">pending</span>' : ''}</div>
+            <div class="tx-cat">${(tx.personal_finance_category?.primary || tx.category?.[0] || '').toLowerCase().replace(/_/g, ' ')}</div>
+          </td>
+          <td class="tx-date">${fmtDate(tx.date)}</td>
+          <td class="tx-amt ${isCredit ? 'credit' : 'debit'}">${isCredit ? '+' : ''}${fmt$(tx.amount)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
+    return block;
+  }
+
+  async function loadDashboard() {
+    const statusEl = document.getElementById('statusBar');
+
+    // Compute net worth from sessionStorage accounts
     if (accounts.length) {
-      const list = document.getElementById('accountList');
-      list.innerHTML = '';
       let total = 0;
-      accounts.forEach(acct => {
-        const bal = acct.balances?.current ?? null;
-        if (bal != null) total += bal;
-        const isNeg = bal < 0;
-        const balStr = bal != null ? `$${Math.abs(bal).toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
-        const div = document.createElement('div');
-        div.className = 'account-card';
-        div.innerHTML = `
-          <div class="acct-left">
-            <div class="acct-name">${acct.name}</div>
-            <div class="acct-sub">${acct.subtype}${acct.mask ? ' ····' + acct.mask : ''}</div>
-          </div>
-          <div class="acct-bal${isNeg?' negative':''}">${balStr}</div>
-        `;
-        list.appendChild(div);
+      accounts.forEach(a => { if (a.balances?.current != null) total += a.balances.current; });
+      document.getElementById('netWorth').textContent = fmt$(total);
+      document.getElementById('nwSub').textContent = `Across ${accounts.length} account${accounts.length === 1 ? '' : 's'}`;
+    }
+
+    if (!item_id) {
+      statusEl.textContent = 'No session data — reconnect your bank to see transactions.';
+      statusEl.className = 'sub status-bar error';
+
+      // Render accounts without transactions if we have them from session
+      if (accounts.length) {
+        const container = document.getElementById('accountsContainer');
+        accounts.forEach(acct => container.appendChild(renderAccountBlock(acct, [])));
+      }
+      return;
+    }
+
+    try {
+      statusEl.textContent = 'Fetching transactions from Plaid…';
+      const res = await fetch(`${SERVER}/transactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item_id }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(JSON.stringify(data.error));
+
+      const { transactions, accounts: plaidAccounts } = data;
+
+      // Group transactions by account_id
+      const byAccount = {};
+      transactions.forEach(tx => {
+        if (!byAccount[tx.account_id]) byAccount[tx.account_id] = [];
+        byAccount[tx.account_id].push(tx);
       });
 
-      document.getElementById('netWorth').textContent =
-        '$' + total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-      document.getElementById('accountCount').textContent =
-        `Across ${accounts.length} account${accounts.length===1?'':'s'}`;
-    } else {
-      // No session data — show placeholder
-      document.getElementById('netWorth').textContent = '—';
-      document.getElementById('accountCount').textContent = 'Connect your bank to get started';
-    }
+      // Sort each account's txns by date desc
+      Object.values(byAccount).forEach(arr => arr.sort((a, b) => b.date.localeCompare(a.date)));
 
-    function copyInvite() {
-      navigator.clipboard.writeText(INVITE_URL).catch(() => {});
-      const t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2000);
+      const container = document.getElementById('accountsContainer');
+      container.innerHTML = '';
+
+      // Use Plaid accounts (fresher data) if available, else session accounts
+      const acctList = plaidAccounts?.length ? plaidAccounts : accounts;
+
+      // Recompute net worth with fresh data
+      if (plaidAccounts?.length) {
+        let total = 0;
+        plaidAccounts.forEach(a => { if (a.balances?.current != null) total += a.balances.current; });
+        document.getElementById('netWorth').textContent = fmt$(total);
+        document.getElementById('nwSub').textContent = `Across ${plaidAccounts.length} account${plaidAccounts.length === 1 ? '' : 's'}`;
+      }
+
+      acctList.forEach(acct => {
+        const txns = byAccount[acct.account_id] || [];
+        container.appendChild(renderAccountBlock(acct, txns));
+      });
+
+      const total = transactions.length;
+      statusEl.textContent = `Last 90 days · ${total} transaction${total === 1 ? '' : 's'} loaded`;
+      statusEl.className = 'sub';
+
+    } catch (err) {
+      statusEl.textContent = 'Could not load transactions: ' + (err.message || 'unknown error');
+      statusEl.className = 'sub status-bar error';
+      // Still render accounts without txns
+      if (accounts.length) {
+        const container = document.getElementById('accountsContainer');
+        accounts.forEach(acct => container.appendChild(renderAccountBlock(acct, [])));
+      }
     }
-  </script>
+  }
+
+  loadDashboard();
+</script>
 </body>
 </html>
