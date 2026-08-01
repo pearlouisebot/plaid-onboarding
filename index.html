@@ -53,7 +53,8 @@
 
     .icon { font-size: 40px; margin-bottom: 16px; }
     h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; line-height: 1.2; }
-    .subtitle { color: #777; font-size: 14px; line-height: 1.6; margin-bottom: 32px; }
+    .subtitle { color: #777; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+    .privacy-note { font-size: 11px; color: #555; margin-bottom: 24px; font-style: italic; }
 
     label { display: block; font-size: 13px; color: #999; margin-bottom: 6px; }
     input {
@@ -143,10 +144,17 @@
   <div class="step" id="step-1">
     <div class="icon">👤</div>
     <h1>Who are you?</h1>
-    <p class="subtitle">Just your name and email so we can tie your financial profile to you.</p>
+    <p class="subtitle">Just a few basics to set up your profile.</p>
+    <p class="privacy-note">None of this will be visible to others — you’ll choose a handle later.</p>
 
-    <label for="name">First name</label>
-    <input type="text" id="name" placeholder="Amanda" autocomplete="given-name" />
+    <label for="firstName">First name</label>
+    <input type="text" id="firstName" placeholder="Amanda" autocomplete="given-name" />
+
+    <label for="lastName">Last name</label>
+    <input type="text" id="lastName" placeholder="Bradford" autocomplete="family-name" />
+
+    <label for="birthday">Birthday</label>
+    <input type="date" id="birthday" autocomplete="bday" />
 
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
@@ -200,12 +208,16 @@
   }
 
   function goToPlaid() {
-    const name  = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    if (!name)  { alert('Please enter your name.'); return; }
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const birthday  = document.getElementById('birthday').value;
+    const email     = document.getElementById('email').value.trim();
+    if (!firstName) { alert('Please enter your first name.'); return; }
+    if (!lastName)  { alert('Please enter your last name.'); return; }
+    if (!birthday)  { alert('Please enter your birthday.'); return; }
     if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
-    userData = { name, email };
-    document.getElementById('previewName').textContent  = name;
+    userData = { name: firstName, last_name: lastName, birthday, email };
+    document.getElementById('previewName').textContent  = firstName + ' ' + lastName;
     document.getElementById('previewEmail').textContent = email;
     goTo(2);
   }
