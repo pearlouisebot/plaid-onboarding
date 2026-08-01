@@ -263,6 +263,10 @@
             });
             const result = await exRes.json();
             if (result.error) throw new Error(JSON.stringify(result.error));
+            sessionStorage.setItem('fdna_name', userData.name || '');
+            sessionStorage.setItem('fdna_db_source', 'supabase');
+            sessionStorage.setItem('fdna_item_id', result.item_id || '');
+            sessionStorage.setItem('fdna_accounts', JSON.stringify(result.accounts || []));
 
             // Show success
             const list = document.getElementById('accountList');
@@ -282,6 +286,13 @@
               `;
               list.appendChild(div);
             });
+
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'btn';
+            continueBtn.style.marginTop = '16px';
+            continueBtn.textContent = 'Continue →';
+            continueBtn.onclick = () => window.location.href = 'dashboard.html';
+            document.getElementById('accounts').appendChild(continueBtn);
 
             // Remove last dot (only 3 steps shown)
             setDots(3);

@@ -140,6 +140,7 @@
   const SERVER   = 'https://plaid-backend-production-b1ff.up.railway.app';
   const name     = sessionStorage.getItem('fdna_name') || '';
   const item_id  = sessionStorage.getItem('fdna_item_id') || '';
+  const source   = sessionStorage.getItem('fdna_db_source') || 'railway';
   const accounts = JSON.parse(sessionStorage.getItem('fdna_accounts') || '[]');
 
   if (name) document.getElementById('welcomeMsg').textContent = `${name}'s Dashboard`;
@@ -248,10 +249,10 @@
 
     try {
       statusEl.textContent = 'Fetching transactions from Plaid…';
-      const res = await fetch(`${SERVER}/transactions`, {
+      const res = await fetch(`${SERVER}/${source}/transactions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item_id }),
+        body: JSON.stringify({ item_id, source }),
       });
       const data = await res.json();
       if (data.error) throw new Error(JSON.stringify(data.error));

@@ -234,6 +234,8 @@
           const result = await exRes.json();
           if (result.error) throw new Error(JSON.stringify(result.error));
           sessionStorage.setItem('fdna_name', userData.name || '');
+          sessionStorage.setItem('fdna_db_source', 'railway');
+          sessionStorage.setItem('fdna_item_id', result.item_id || '');
           sessionStorage.setItem('fdna_accounts', JSON.stringify(result.accounts || []));
           const list = document.getElementById('accountList');
           list.innerHTML = '';
