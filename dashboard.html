@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial DNA — Home</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #09090d;
+      color: #f0f0f5;
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .logo { font-size: 28px; }
+    .brand { font-size: 18px; font-weight: 700; color: #f0f0f5; }
+    .brand span { color: #7c6ff7; }
+
+    .welcome {
+      margin-bottom: 28px;
+    }
+    .welcome h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .welcome p { color: #666; font-size: 14px; }
+
+    /* Net worth card */
+    .net-worth {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 1px solid #2a2a3a;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .net-worth-label { font-size: 12px; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .net-worth-amount { font-size: 40px; font-weight: 800; color: #7c6ff7; letter-spacing: -1px; }
+    .net-worth-sub { font-size: 12px; color: #555; margin-top: 6px; }
+
+    /* Section */
+    .section-title {
+      font-size: 13px;
+      color: #666;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin: 24px 0 12px;
+    }
+
+    /* Account cards */
+    .account-card {
+      background: #13131a;
+      border: 1px solid #1e1e28;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .acct-left {}
+    .acct-name { font-size: 14px; font-weight: 600; }
+    .acct-sub { font-size: 12px; color: #555; margin-top: 2px; }
+    .acct-bal {
+      font-size: 16px;
+      font-weight: 700;
+      color: #7c6ff7;
+    }
+    .acct-bal.negative { color: #ef4444; }
+
+    /* DNA teaser */
+    .dna-card {
+      background: #13131a;
+      border: 1px solid #2a2a3a;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 24px;
+      text-align: center;
+    }
+    .dna-emoji { font-size: 32px; margin-bottom: 10px; }
+    .dna-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .dna-card p { font-size: 13px; color: #666; line-height: 1.5; }
+    .dna-badge {
+      display: inline-block;
+      background: #1e1a3a;
+      border: 1px solid #7c6ff7;
+      color: #7c6ff7;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 4px 12px;
+      margin-top: 12px;
+    }
+
+    /* Invite */
+    .invite-card {
+      background: #13131a;
+      border: 1px dashed #2a2a3a;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 12px;
+      text-align: center;
+    }
+    .invite-card p { font-size: 13px; color: #666; margin-bottom: 12px; }
+    .invite-btn {
+      background: #7c6ff7;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .invite-btn:hover { background: #6259d4; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #22c55e;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">🧬</div>
+    <div class="brand">Financial <span>DNA</span></div>
+  </div>
+
+  <div class="welcome">
+    <h1 id="welcomeMsg">Welcome back! 👋</h1>
+    <p>Your financial profile is ready.</p>
+  </div>
+
+  <!-- Net worth -->
+  <div class="net-worth">
+    <div class="net-worth-label">Total balance</div>
+    <div class="net-worth-amount" id="netWorth">—</div>
+    <div class="net-worth-sub" id="accountCount">calculating...</div>
+  </div>
+
+  <!-- Accounts -->
+  <div class="section-title">Connected accounts</div>
+  <div id="accountList">
+    <div class="account-card" style="color:#555;justify-content:center;font-size:13px;">Loading accounts...</div>
+  </div>
+
+  <!-- DNA teaser -->
+  <div class="dna-card">
+    <div class="dna-emoji">🔬</div>
+    <h3>Your Financial DNA</h3>
+    <p>We're analyzing your spending patterns to reveal your financial personality type.</p>
+    <div class="dna-badge">✨ Analysis coming soon</div>
+  </div>
+
+  <!-- Invite -->
+  <div class="invite-card">
+    <p>Know someone whose financial DNA you're curious about?</p>
+    <button class="invite-btn" onclick="copyInvite()">📋 Copy invite link</button>
+  </div>
+
+  <div class="toast" id="toast">Link copied!</div>
+
+  <script>
+    const INVITE_URL = 'https://pearlouisebot.github.io/plaid-onboarding/join-railway.html';
+
+    // Read name + accounts from sessionStorage (set by join page)
+    const name     = sessionStorage.getItem('fdna_name') || '';
+    const accounts = JSON.parse(sessionStorage.getItem('fdna_accounts') || '[]');
+
+    if (name) {
+      document.getElementById('welcomeMsg').textContent = `Welcome, ${name}! 👋`;
+    }
+
+    if (accounts.length) {
+      const list = document.getElementById('accountList');
+      list.innerHTML = '';
+      let total = 0;
+      accounts.forEach(acct => {
+        const bal = acct.balances?.current ?? null;
+        if (bal != null) total += bal;
+        const isNeg = bal < 0;
+        const balStr = bal != null ? `$${Math.abs(bal).toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2})}` : '—';
+        const div = document.createElement('div');
+        div.className = 'account-card';
+        div.innerHTML = `
+          <div class="acct-left">
+            <div class="acct-name">${acct.name}</div>
+            <div class="acct-sub">${acct.subtype}${acct.mask ? ' ····' + acct.mask : ''}</div>
+          </div>
+          <div class="acct-bal${isNeg?' negative':''}">${balStr}</div>
+        `;
+        list.appendChild(div);
+      });
+
+      document.getElementById('netWorth').textContent =
+        '$' + total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+      document.getElementById('accountCount').textContent =
+        `Across ${accounts.length} account${accounts.length===1?'':'s'}`;
+    } else {
+      // No session data — show placeholder
+      document.getElementById('netWorth').textContent = '—';
+      document.getElementById('accountCount').textContent = 'Connect your bank to get started';
+    }
+
+    function copyInvite() {
+      navigator.clipboard.writeText(INVITE_URL).catch(() => {});
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+  </script>
+</body>
+</html>
