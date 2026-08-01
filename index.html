@@ -181,9 +181,7 @@
 
 <script>
   // localhost → same origin; GitHub Pages → Tailscale server
-  const SERVER = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? window.location.origin
-    : 'https://oculus130123.tail745e9b.ts.net';
+  const SERVER = 'https://plaid-backend-production-b1ff.up.railway.app';
   let userData = { name: '', email: '' };
   let currentStep = 0;
 
