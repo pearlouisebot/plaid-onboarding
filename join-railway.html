@@ -23,7 +23,7 @@
       const res = await fetch(SERVER + '/lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, password: document.getElementById('loginPassword').value }),
       });
       const data = await res.json();
       if (!data.found) {
@@ -193,8 +193,10 @@
   <div class="step" id="step-login" style="text-align:center;padding:8px 0;">
     <div class="icon">👋</div>
     <h1>Welcome back</h1>
-    <p class="subtitle" style="margin-bottom:24px;">Enter the email you signed up with.</p>
+    <p class="subtitle" style="margin-bottom:24px;">Log in with your email and password.</p>
     <input id="loginEmail" type="email" placeholder="your@email.com"
+      style="width:100%;background:#0d0d14;border:1px solid #2a2a3a;border-radius:10px;padding:14px 16px;color:#f0f0f5;font-size:15px;margin-bottom:10px;outline:none;display:block;" />
+    <input id="loginPassword" type="password" placeholder="Your password"
       style="width:100%;background:#0d0d14;border:1px solid #2a2a3a;border-radius:10px;padding:14px 16px;color:#f0f0f5;font-size:15px;margin-bottom:12px;outline:none;display:block;" />
     <button class="btn" onclick="doLogin()">Log in →</button>
     <div id="loginStatus" style="margin-top:12px;font-size:13px;color:#888;min-height:20px;"></div>
@@ -216,6 +218,9 @@
 
     <label for="birthday">Birthday</label>
     <input type="date" id="birthday" autocomplete="bday" />
+
+    <label for="password" style="margin-top:8px;">Create a password</label>
+    <input type="password" id="password" placeholder="Min 6 characters" autocomplete="new-password" />
 
     <label for="email">Email</label>
     <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
@@ -394,6 +399,7 @@
                 last_name: userData.last_name,
                 birthday: userData.birthday,
                 email: userData.email,
+                password: document.getElementById('password')?.value || '',
               }),
             });
             const result = await exRes.json();
