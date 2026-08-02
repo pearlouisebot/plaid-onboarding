@@ -7,7 +7,44 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js">
+  function showLogin() {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    document.querySelector('.steps').style.display = 'none';
+    document.getElementById('step-login').classList.add('active');
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const statusEl = document.getElementById('loginStatus');
+    if (!email) { statusEl.textContent = 'Please enter your email.'; return; }
+    statusEl.textContent = 'Looking you up…';
+    try {
+      const res = await fetch(SERVER + '/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!data.found) {
+        statusEl.textContent = 'No account found for that email. Try signing up instead.';
+        return;
+      }
+      sessionStorage.setItem('fdna_name',      data.name || '');
+      sessionStorage.setItem('fdna_item_id',   data.item_id || '');
+      sessionStorage.setItem('fdna_db_source', 'supabase');
+      sessionStorage.setItem('fdna_accounts',  JSON.stringify(data.accounts || []));
+      localStorage.setItem('fdna_name',      data.name || '');
+      localStorage.setItem('fdna_item_id',   data.item_id || '');
+      localStorage.setItem('fdna_db_source', 'supabase');
+      localStorage.setItem('fdna_accounts',  JSON.stringify(data.accounts || []));
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      statusEl.textContent = 'Error: ' + (err.message || 'unknown');
+    }
+  }
+
+</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -145,9 +182,23 @@
 
   <div class="step active" id="step-0">
     <div class="icon">🧬</div>
-    <h1>Financial DNA Explorer</h1>
-    <p class="subtitle">Discover what your spending habits reveal about you — and how you connect with others.</p>
-    <button class="btn" onclick="goTo(1)">Get started →</button>
+    <h1>Financial DNA</h1>
+    <p class="subtitle">Understand your money like never before.</p>
+    <button class="btn" onclick="goTo(1)" style="margin-bottom:12px;">New here → Get started</button>
+    <br>
+    <button onclick="showLogin();" style="background:none;border:1px solid #2a2a3a;color:#aaa;border-radius:12px;padding:14px 24px;font-size:15px;cursor:pointer;width:100%;margin-top:8px;">Already joined → Log in</button>
+  </div>
+
+  <!-- Login step -->
+  <div class="step" id="step-login" style="text-align:center;padding:8px 0;">
+    <div class="icon">👋</div>
+    <h1>Welcome back</h1>
+    <p class="subtitle" style="margin-bottom:24px;">Enter the email you signed up with.</p>
+    <input id="loginEmail" type="email" placeholder="your@email.com"
+      style="width:100%;background:#0d0d14;border:1px solid #2a2a3a;border-radius:10px;padding:14px 16px;color:#f0f0f5;font-size:15px;margin-bottom:12px;outline:none;display:block;" />
+    <button class="btn" onclick="doLogin()">Log in →</button>
+    <div id="loginStatus" style="margin-top:12px;font-size:13px;color:#888;min-height:20px;"></div>
+    <button onclick="goTo(0);document.querySelector('.steps').style.display='';" style="background:none;border:none;color:#444;font-size:13px;cursor:pointer;margin-top:16px;">← Back</button>
   </div>
 
   <!-- ── Step 1: Profile ── -->
