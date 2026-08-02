@@ -7,7 +7,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js">
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <script>
   function showLogin() {
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
     document.querySelector('.steps').style.display = 'none';
@@ -43,8 +44,7 @@
       statusEl.textContent = 'Error: ' + (err.message || 'unknown');
     }
   }
-
-</script>
+  </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
