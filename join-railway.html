@@ -133,6 +133,16 @@
   </div>
 
   <!-- ── Step 0: Welcome ── -->
+  <!-- Returning user step -->
+  <div class="step" id="step-returning" style="text-align:center;">
+    <div style="font-size:48px;margin-bottom:16px;">👋</div>
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:8px;">Welcome back, <span id="returning-name"></span>!</h2>
+    <p style="color:#666;font-size:14px;margin-bottom:32px;">Your bank is already connected.</p>
+    <button class="btn" onclick="window.location.href='dashboard.html'" style="margin-bottom:12px;">Go to Dashboard →</button>
+    <br>
+    <button onclick="localStorage.clear();location.reload();" style="background:none;border:none;color:#444;font-size:13px;cursor:pointer;margin-top:8px;">Connect a different account</button>
+  </div>
+
   <div class="step active" id="step-0">
     <div class="icon">🧬</div>
     <h1>Financial DNA Explorer</h1>
@@ -237,6 +247,11 @@
           sessionStorage.setItem('fdna_db_source', 'railway');
           sessionStorage.setItem('fdna_item_id', result.item_id || '');
           sessionStorage.setItem('fdna_accounts', JSON.stringify(result.accounts || []));
+          // Also persist to localStorage so returning users skip onboarding
+          localStorage.setItem('fdna_name', userData.name || '');
+          localStorage.setItem('fdna_item_id', result.item_id || '');
+          localStorage.setItem('fdna_db_source', 'railway');
+          localStorage.setItem('fdna_accounts', JSON.stringify(result.accounts || []));
           const list = document.getElementById('accountList');
           list.innerHTML = '';
           (result.accounts || []).forEach(acct => {
